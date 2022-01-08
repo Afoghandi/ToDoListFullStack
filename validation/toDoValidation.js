@@ -8,7 +8,7 @@ const validateToDoInput = (data) => {
 	// check content field
 	if (isEmpty(data.content)) {
 		errors.content = 'Content field cannot be Empty';
-	} else if (!Validator.isLemgth(data.content, { min: 1, max: 300 })) {
+	} else if (!Validator.isLength(data.content, { min: 1, max: 300 })) {
 		errors.content = 'Content field must be between 1 and 3';
 	}
 
