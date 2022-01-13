@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
 import axios from 'axios';
+import { disable } from 'express/lib/application';
 
 //initial State
 
@@ -92,7 +93,12 @@ export const GlobalProvider = (props) => {
 			dispatch({ type: 'RESET_USER' });
 		}
 	};
-
+	const addToDo = (toDo) => {
+		dispatch({
+			type: 'SET_INCOMPLETE_TODOS',
+			payload: [toDo, ...state.incompleteToDos],
+		});
+	};
 	const value = {
 		...state,
 		getCurrentUser,
