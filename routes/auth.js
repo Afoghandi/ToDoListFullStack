@@ -1,147 +1,31 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const validateRegisterInput = require('../validation/registerValidation');
-const jwt = require('jsonwebtoken');
-const requiresAuth = require('../middleware/permissions');
+import express from 'express';
+import requiresAuth from '../middleware/permissions.js';
+import {
+	test,
+	registerUser,
+	login,
+	current,
+	logout,
+} from '../controllers/auth.js';
 
-// @route GET /api/auth/test
-// @desc  Test the auth route
-// @access Public
-router.get('/test', (req, res) => {
-	res.send('Auth is working');
-});
+const router = express.Router();
+
+router.get('/test', test);
 
 // @route Post /api/auth/register
-// @desc  Create a new user
-// @access Public
 
-router.post('/register', async (req, res) => {
-	try {
-		const { errors, isValid } = validateRegisterInput(req.body);
-
-		if (!isValid) {
-			return res.status(400).json(errors);
-		}
-		//deconstruct from req.body
-		const { email, password, name } = req.body;
-
-		//check for existing user
-		const existingEmail = await User.findOne({
-			email: new RegExp('^' + email + '$', 'i'),
-		});
-		if (existingEmail) {
-			return res
-				.status(400)
-				.json({ error: 'There is already a user with this email' });
-		}
-		//hash password
-		const hashedPassword = await bcrypt.hash(password, 12);
-		// create a new user
-		const newUser = new User({
-			email: email,
-			password: hashedPassword,
-			name: name,
-		});
-
-		// save the user to the database
-		const savedUser = await newUser.save();
-
-		const payload = { userId: savedUser._id };
-		const token = jwt.sign(payload, process.env.JWT_SECRET, {
-			expiresIn: '7d',
-		});
-
-		res.cookie('access-token', token, {
-			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-		});
-
-		const userToReturn = { ...savedUser._doc };
-
-		delete userToReturn.password;
-		//retuen the new user
-
-		return res.json(userToReturn);
-	} catch (err) {
-		console.log(err);
-		res.status(500).send(err.message);
-	}
-});
+router.post('/register', registerUser);
 
 // @route Post /api/auth/login
-// @desc  Loging user and return access token
-// @access Public
 
-router.post('/login', async (req, res) => {
-	try {
-		const { email, password } = req.body;
-		//check for the user
-		const user = await User.findOne({
-			email: new RegExp('^' + email + '$', 'i'),
-		});
-		if (!user) {
-			return res
-				.status(400)
-				.json({ error: 'There was a problem with your login credentials' });
-		}
-		const passwordMatch = await bcrypt.compare(password, user.password);
-
-		if (!passwordMatch) {
-			return res
-
-				.status(400)
-				.json({ error: 'There was a problem with your login credentials' });
-		}
-
-		const payload = { userId: user._id };
-		const token = jwt.sign(payload, process.env.JWT_SECRET, {
-			expiresIn: '7d',
-		});
-
-		res.cookie('access-token', token, {
-			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-		});
-
-		const userToReturn = { ...user._doc };
-		delete userToReturn.password;
-
-		return res.json({
-			token: token,
-			user: userToReturn,
-		});
-	} catch (err) {
-		return res.status(500).send(err.message);
-	}
-});
+router.post('/login', login);
 
 // @route GET /api/auth/current
-// @desc  Return the currently authed user
-// @access Private
 
-router.get('/current', requiresAuth, async (req, res) => {
-	if (!req.user) {
-		return res.status(401).send('Unauthorised');
-	}
-	return res.json(req.user);
-});
-module.exports = router;
+router.get('/current', requiresAuth, current);
 
 // @route PUT /api/auth/logout
-// @desc  Logout user and clear the cookie
-// @access Private
 
-router.put('/logout', requiresAuth, async (req, res) => {
-	try {
-		res.clearCookie('access-token');
+router.put('/logout', requiresAuth, logout);
 
-		return res.json({ success: true });
-	} catch (err) {
-		console.log(err);
-		return res.status(500).send(err.message);
-	}
-});
+export default router;

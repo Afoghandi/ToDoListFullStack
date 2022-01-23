@@ -1,5 +1,6 @@
-const Validator = require('validator');
-const isEmpty = require('./isEmpty');
+import Validator from 'validator';
+import isEmpty from './isEmpty.js';
+
 const validateRegisterInput = (data) => {
 	let errors = {};
 
@@ -38,4 +39,4 @@ const validateRegisterInput = (data) => {
 	};
 };
 
-module.exports = validateRegisterInput;
+export default validateRegisterInput;

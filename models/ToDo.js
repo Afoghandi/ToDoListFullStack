@@ -1,9 +1,9 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
 
-const ToDoSchema = new Schema(
+const ToDoSchema = mongoose.Schema(
 	{
 		user: {
-			type: Schema.Types.ObjectId,
+			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
 		},
 		content: {
@@ -24,5 +24,5 @@ const ToDoSchema = new Schema(
 );
 
 // export the model
-const ToDo = model('ToDo', ToDoSchema);
-module.exports = ToDo;
+
+export default mongoose.model('ToDo', ToDoSchema);

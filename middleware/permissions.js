@@ -1,6 +1,6 @@
-const User = require('../models/User');
+import User from '../models/User.js';
 
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 const requiresAuth = async (req, res, next) => {
 	const token = req.cookies['access-token'];
@@ -32,4 +32,4 @@ const requiresAuth = async (req, res, next) => {
 		return res.status(401).send('Unauthorised');
 	}
 };
-module.exports = requiresAuth;
+export default requiresAuth;

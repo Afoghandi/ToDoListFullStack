@@ -1,6 +1,6 @@
-const Validator = require('validator');
+import Validator from 'validator';
 
-const isEmpty = require('./isEmpty');
+import isEmpty from './isEmpty.js';
 
 const validateToDoInput = (data) => {
 	let errors = {};
@@ -18,4 +18,4 @@ const validateToDoInput = (data) => {
 	};
 };
 
-module.exports = validateToDoInput;
+export default validateToDoInput;

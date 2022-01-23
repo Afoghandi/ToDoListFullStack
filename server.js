@@ -1,35 +1,42 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import connectDB from './config/db.js';
+import authRoute from './routes/auth.js';
+import todosRoute from './routes/todos.js';
 
-const cookieParser = require('cookie-parser');
-//import routes
-
-const authRoute = require('./routes/auth');
-const toDosRoute = require('./routes/todos');
-
+dotenv.config();
 const app = express();
 
-app.use(express.json());
+//connect Database
 
-//app.use(express.urlencoded());
+connectDB();
+
+//import routes
+//import { authRoute } from './routes/auth.js';
+//import { toDosRoute } from './routes/todos.js';
+//const authRoute = require('./routes/auth');
+//const toDosRoute = require('./routes/todos');
+
+//init middleware
+app.use(express.json({ extended: false }));
+
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 app.use(cookieParser());
 
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
 	res.send('To do list full stack');
 });
 
+app.use('/api', authRoute);
 app.use('/api/auth', authRoute);
-app.use('/api/toDos', toDosRoute);
+app.use('/api/todos', todosRoute);
 
-mongoose
-	.connect(process.env.MONGO_URI)
-	.then(() => {
-		console.log('Connected to database');
-		app.listen(process.env.PORT, () => {
-			console.log(`Server running on port ${process.env.PORT}`);
-		});
-	})
-	.catch((error) => {
-		console.log(error);
-	});
+//app.use('/api/auth', authRoute);
+//app.use('/api/toDos', toDosRoute);
+
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
