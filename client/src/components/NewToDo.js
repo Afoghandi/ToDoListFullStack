@@ -1,9 +1,11 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useGlobalContext } from '../context/GlobalContext';
+import React, { useState, useContext } from 'react';
+import TodoContext from '../context/todo/TodoContext';
 
 const NewToDo = () => {
-	const { addToDo } = useGlobalContext();
+	const todoContext = useContext(TodoContext);
+	const { addToDo } = todoContext;
+
 	const [content, setContent] = useState('');
 
 	const onSubmit = (e) => {

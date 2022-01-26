@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useGlobalContext } from '../context/GlobalContext';
+
+import AuthContext from '../context/auth/AuthContext';
 
 const Header = () => {
-	const { user, logout } = useGlobalContext();
+	const authContext = useContext(AuthContext);
+	const { user, logout } = authContext;
+
 	const { pathname } = useLocation();
 	return (
 		<div className='main-header'>

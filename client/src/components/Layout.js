@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useGlobalContext } from '../context/GlobalContext';
+
+import AuthContext from '../context/auth/AuthContext';
 import AuthBox from './AuthBox';
 import Dashboard from './Dashboard';
 import Header from './Header';
 
 const Layout = () => {
-	const { fetchingUser } = useGlobalContext();
+	const authContext = useContext(AuthContext);
+	const { fetchingUser, getCurrentUser } = authContext;
+
+	useEffect(() => {
+		getCurrentUser();
+	}, []);
 	return fetchingUser ? (
 		<div className='loading'>
 			<h1>Loading</h1>{' '}

@@ -1,0 +1,4 @@
+export const SET_USER = 'SET_USER';
+export const SET_COMPLETE_TODOS = 'SET_COMPLETE_TODOS';
+export const SET_INCOMPLETE_TODOS = 'SET_INCOMPLETE_TODOS';
+export const RESET_USER = 'RESET_USER';

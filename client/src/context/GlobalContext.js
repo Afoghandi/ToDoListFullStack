@@ -1,4 +1,10 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import {
+	SET_COMPLETE_TODOS,
+	SET_USER,
+	SET_INCOMPLETE_TODOS,
+	RESET_USER,
+} from './types';
 
 import axios from 'axios';
 
@@ -14,26 +20,26 @@ const initialState = {
 //reducer
 const globalReducer = (state, action) => {
 	switch (action.type) {
-		case 'SET_USER':
+		case SET_USER:
 			return {
 				...state,
 				user: action.payload,
 				fetchingUser: false,
 			};
 
-		case 'SET_COMPLETE_TODOS':
+		case SET_COMPLETE_TODOS:
 			return {
 				...state,
 				completeToDos: action.payload,
 			};
 
-		case 'SET_INCOMPLETE_TODOS':
+		case SET_INCOMPLETE_TODOS:
 			return {
 				...state,
 				incompleteToDos: action.payload,
 			};
 
-		case 'RESET_USER':
+		case RESET_USER:
 			return {
 				...state,
 				user: null,

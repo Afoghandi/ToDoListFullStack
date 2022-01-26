@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../context/auth/AuthContext';
 import axios from 'axios';
-import { useGlobalContext } from '../context/GlobalContext';
 
 const AuthBox = ({ register }) => {
-	const { getCurrentUser, user } = useGlobalContext();
+	const authContext = useContext(AuthContext);
+	const { getCurrentUser, user } = authContext;
+
 	const navigate = useNavigate();
 	const [email, setEmail] = useState('');
 	const [name, setName] = useState('');

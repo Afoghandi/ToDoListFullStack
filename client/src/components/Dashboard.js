@@ -1,11 +1,17 @@
-import React, { useEffect } from 'react';
-import { useGlobalContext } from '../context/GlobalContext';
+import React, { useEffect, useContext } from 'react';
+
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../context/auth/AuthContext';
+import TodoContext from '../context/todo/TodoContext';
 import ToDoCard from './ToDoCard';
 import NewToDo from './NewToDo';
 
 const Dashboard = () => {
-	const { user, completeToDos, incompleteToDos } = useGlobalContext();
+	const authContext = useContext(AuthContext);
+	const todoContext = useContext(TodoContext);
+	const { user } = authContext;
+	const { completeToDos, incompleteToDos } = todoContext;
+
 	const navigate = useNavigate();
 
 	useEffect(() => {

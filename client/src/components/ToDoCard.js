@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import axios from 'axios';
-import { useGlobalContext } from '../context/GlobalContext';
+import TodoContext from '../context/todo/TodoContext';
 
 const ToDoCard = ({ toDo }) => {
+	const todoContext = useContext(TodoContext);
 	const [content, setContent] = useState(toDo.content);
-	const { toDoComplete, toDoIncomplete, removeToDo, updateToDo } =
-		useGlobalContext();
+
+	const { toDoComplete, toDoIncomplete, removeToDo, updateToDo } = todoContext;
 
 	const [editing, setEditing] = useState(false);
 	const input = useRef(null);
