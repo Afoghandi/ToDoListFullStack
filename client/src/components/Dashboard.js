@@ -8,9 +8,8 @@ import NewToDo from './NewToDo';
 
 const Dashboard = () => {
 	const authContext = useContext(AuthContext);
-	const todoContext = useContext(TodoContext);
-	const { user } = authContext;
-	const { completeToDos, incompleteToDos } = todoContext;
+
+	const { user, completeToDos, incompleteToDos } = authContext;
 
 	const navigate = useNavigate();
 

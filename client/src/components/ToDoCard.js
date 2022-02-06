@@ -1,12 +1,12 @@
 import React, { useState, useRef, useContext } from 'react';
 import axios from 'axios';
-import TodoContext from '../context/todo/TodoContext';
+import AuthContext from '../context/auth/AuthContext';
 
 const ToDoCard = ({ toDo }) => {
-	const todoContext = useContext(TodoContext);
+	const authContext = useContext(AuthContext);
 	const [content, setContent] = useState(toDo.content);
 
-	const { toDoComplete, toDoIncomplete, removeToDo, updateToDo } = todoContext;
+	const { toDoComplete, toDoIncomplete, removeToDo, updateToDo } = authContext;
 
 	const [editing, setEditing] = useState(false);
 	const input = useRef(null);
@@ -25,26 +25,36 @@ const ToDoCard = ({ toDo }) => {
 		setContent(toDo.content);
 	};
 
-	const markAsComplete = (e) => {
+	const markAsComplete = async (e) => {
 		e.preventDefault();
-		axios.put(`/api/todos/${toDo._id}/complete`).then((res) => {
+		try {
+			const res = await axios.put(`/api/todos/${toDo._id}/complete`);
+
 			toDoComplete(res.data);
-		});
+		} catch (err) {
+			console.log(err.message);
+		}
 	};
-	const markAsIncomplete = (e) => {
+	const markAsIncomplete = async (e) => {
 		e.preventDefault();
-		axios.put(`/api/todos/${toDo._id}/incomplete`).then((res) => {
+		try {
+			const res = await axios.put(`/api/todos/${toDo._id}/incomplete`);
+
 			toDoIncomplete(res.data);
-		});
+		} catch (err) {
+			console.log(err.message);
+		}
 	};
 
-	const deleteToDo = (e) => {
+	const deleteToDo = async (e) => {
 		e.preventDefault();
-
-		if (window.confirm('Are you sure you want to delete this ToDo?')) {
-			axios.delete(`/api/todos/${toDo._id}`).then(() => {
+		try {
+			if (window.confirm('Are you sure you want to delete this ToDo?')) {
+				await axios.delete(`/api/todos/${toDo._id}`);
 				removeToDo(toDo);
-			});
+			}
+		} catch (err) {
+			console.log(err.message);
 		}
 	};
 

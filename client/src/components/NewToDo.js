@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useState, useContext } from 'react';
-import TodoContext from '../context/todo/TodoContext';
+import AuthContext from '../context/auth/AuthContext';
 
 const NewToDo = () => {
-	const todoContext = useContext(TodoContext);
-	const { addToDo } = todoContext;
+	const authContext = useContext(AuthContext);
+	const { addToDo } = authContext;
 
 	const [content, setContent] = useState('');
 
